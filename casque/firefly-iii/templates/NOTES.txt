@@ -1,0 +1,32 @@
+CHART NAME: {{ .Chart.Name }}
+CHART VERSION: {{ .Chart.Version }}
+APP VERSION: {{ .Chart.AppVersion }}
+
+** Please be patient while the chart is being deployed **
+
+{{- if .Values.postgresql.enabled }}
+You have selected to install a postgresql instance, and web.config.db will be ignored.
+
+{{- else }}
+You are not installing a postgresql instance. Make sure your values.yaml
+specifies:
+    - web.config.db.connection
+    - web.config.db.host
+    - web.config.db.port
+    - web.config.db.database
+    - web.config.db.username
+    - web.config.db.password
+    - web.config.db.socket
+
+{{- end }}
+{{- if .Values.config.cronjob.enabled }}
+You have enabled the cronjob.
+To view the cronjobs, execute the following:
+
+    kubectl --namespace {{ .Release.Namespace }} get cronjob
+
+Get the list of jobs by executing:
+
+    kubectl --namespace {{ .Release.Namespace }} get job
+
+{{- end }}

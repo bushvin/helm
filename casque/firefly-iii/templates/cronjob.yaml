@@ -1,0 +1,40 @@
+{{- if .Values.config.cronjob.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "firefly-iii.fullname" . | trunc 59 | trimSuffix "-" }}-cron
+  labels:
+    {{- include "firefly-iii.labels" . | nindent 4 }}
+spec:
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit | default "5" }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit | default "5" }}
+  schedule: "{{ .Values.config.cronjob.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: {{ include "firefly-iii.fullname" . | trunc 59 | trimSuffix "-" }}-cron
+            {{- include "firefly-iii.selectorLabels" . | nindent 12 }}
+        spec:
+          restartPolicy: {{ .Values.cronjob.restartPolicy }}
+          containers:
+            - name: {{ include "firefly-iii.name" . }}-cron
+              image: {{ include "firefly-iii.cron.image" . }}
+              imagePullPolicy: {{ default "IfNotPresent" .Values.cronjob.image.imagePullPolicy }}
+              {{- if .Values.config.cronjob.enabled }}
+              envFrom:
+                {{- if eq .Values.config.cronjob.existingSecret "" }}
+                - secretRef:
+                    name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-cron
+                {{- else }}
+                - secretRef:
+                    name: {{ .Values.config.cronjob.existingSecret }}
+                {{- end }}
+              {{- end }}
+              args:
+                - "--silent"
+                - "--show-error"
+                - "--fail"
+                - "http://{{ include "firefly-iii.fullname" . }}:8080/api/v1/cron/$(STATIC_CRON_TOKEN)"
+{{- end }}

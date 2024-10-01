@@ -1,0 +1,469 @@
+# Copyright William Leemans. All rights Reserved
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+## @section configuration parameters
+## Please refer to the official documentation for more information
+##
+config:
+  ## @param config.cronjob.enabled Enable/disable the daily cronjob
+  ## @param config.cronjob.existingSecret Name of the existing secret to use for the Static Cron Token
+  ## @param config.cronjob.auth.token (STATIC_CRON_TOKEN) The Static Cron Token to use
+  ## @param config.cronjob.schedule Set the cronjob parameter schedule
+  ##
+  cronjob:
+    enabled: false
+    existingSecret: ""
+    auth:
+      token: ""
+    schedule: "@daily"
+
+  importer:
+    enabled: false
+
+  ## @param config.allowWebhooks allow Firefly III webhooks (ALLOW_WEBHOOKS)
+  ##
+  allowWebhooks: false
+
+  ## @param config.app.existingSecret Name of existing secret to use.
+  ## @param config.app.debug (APP_DEBUG) see debug information in error screens
+  ## @param config.app.env (APP_ENV) application environment
+  ## @param config.app.key (APP_KEY) The encryption key for your sessions
+  ## @param config.app.logLevel (APP_LOG_LEVEL) The application log level
+  ## @param config.app.name (APP_NAME) The application name (do not change unless you know what you're doing)
+  ## @param config.app.url (APP_URL) External URL of the application
+  ##
+  app:
+    existingSecret: ""
+    debug: false
+    env: production
+    key: ""
+    logLevel: notice
+    name: FireflyIII
+    url: http://localhost
+
+  ## @param config.broadcastDriver (BROADCAST_DRIVER) (do not change unless you know what you're doing)
+  ##
+  broadcastDriver: log
+
+  ## Database connection information. This section should only be used when adressing an
+  ## external database, ie not the postgres which is installed with this chart
+  ## @param config.db.existingSecret Name of existing secret to use.
+  ## @param config.db.connection (DB_CONNECTION) dB connection type: "pgsql", "mysql" or "sqlite"
+  ## @param config.db.username (DB_USERNAME) dB username
+  ## @param config.db.password (DB_PASSWORD) dB password
+  ## @param config.db.host (DB_HOST) dB hostname
+  ## @param config.db.port (DB_PORT) dB host port number
+  ## @param config.db.database (DB_DATABASE) database name
+  ## @param config.db.socket (DB_SOCKET) dB socket name
+  ##
+  db:
+    existingSecret: ""
+    connection: "pgsql"
+    username: ""
+    password: ""
+    host: ""
+    port: ""
+    database: ""
+    socket: ""
+
+  ## @param config.auditLog.channel (AUDIT_LOG_CHANNEL) the audit log channel
+  ## @param config.auditLog.level (AUDIT_LOG_LEVEL) the audit log level
+  ##
+  auditLog:
+    channel: ""
+    level: emergency
+
+  ## @param config.authenticationGuard.email (AUTHENTICATION_GUARD_EMAIL)
+  ## @param config.authenticationGuard.header (AUTHENTICATION_GUARD_HEADER)
+  ## @param config.authenticationGuard.method (AUTHENTICATION_GUARD)
+  ##
+  authenticationGuard:
+    email: ""
+    header: REMOTE_USER
+    method: web
+
+  ## @param config.cache.driver (CACHE_DRIVER)
+  ## @param config.cache.prefix (CACHE_PREFIX)
+  ##
+  cache:
+    driver: file
+    prefix: firefly
+
+  ## @param config.cookie.domain (COOKIE_DOMAIN)
+  ## @param config.cookie.path (COOKIE_PATH)
+  ## @param config.cookie.samesite (COOKIE_SAMESITE)
+  ## @param config.cookie.secure (COOKIE_SECURE)
+  ##
+  cookie:
+    domain: ""
+    path: "/"
+    samesite: false
+    secure: lax
+
+  ## @param config.customLogoutURL (CUSTOM_LOGOUT_URL)
+  ##
+  customLogoutURL: ""
+
+  ## @param config.default.language (DEFAULT_LANGUAGE)
+  ## @param config.default.locale (DEFAULT_LOCALE)
+  ##
+  default:
+    language: en_US
+    locale: equal
+
+  ## @param config.demo.existingSecret Name of existing secret to use.
+  ## @param config.demo.username (DEMO_USERNAME) (do not change unless you know what you're doing)
+  ## @param config.demo.password (DEMO_PASSWORD) (do not change unless you know what you're doing)
+  ##
+  demo:
+    existingSecret: ""
+    username: ""
+    password: ""
+
+  ## @param config.disable.cspHeader (DISABLE_CSP_HEADER) Disable Content Security Policy header
+  ## @param config.disable.frameHeader (DISABLE_FRAME_HEADER) Disable disable the X-Frame-Options header
+  ##
+  disable:
+    cspHeader: false
+    frameHeader: false
+
+  ## @param config.dkr.buildLocale (DKR_BUILD_LOCALE)
+  ## @param config.dkr.checkSqlite (DKR_CHECK_SQLITE)
+  ##
+  dkr:
+    buildLocale: false
+    checkSqlite: true
+
+  ## @param config.enable.exchangeRates (ENABLE_EXCHANGE_RATES)
+  ## @param config.enable.externalMap (ENABLE_EXTERNAL_MAP)
+  ## @param config.enable.externalRates (ENABLE_EXTERNAL_RATES)
+  ##
+  enable:
+    exchangeRates: false
+    externalMap: false
+    externalRates: false
+
+  ## @param config.fireflyIIIlayout (FIREFLY_III_LAYOUT)
+  ##
+  fireflyIIIlayout: v1
+
+  ## @param config.ipInfo.existingSecret Name of existing secret to use.
+  ## @param config.ipInfo.Token (IPINFO_TOKEN) (do not change unless you know what you're doing)
+  ##
+  ipInfo:
+    existingSecret: ""
+    token: ""
+
+
+  ## @param config.log.channel (LOG_CHANNEL)
+  ## @param config.log.level (LOG_LEVEL)
+  ##
+  log:
+    channel: stack
+    level: emergency
+
+  ## @param config.mail.existingSecret Name of existing secret to use.
+  ## @param config.mail.encryption (MAIL_ENCRYPTION)
+  ## @param config.mail.from (MAIL_FROM)
+  ## @param config.mail.host (MAIL_HOST)
+  ## @param config.mail.mailer (MAIL_MAILER)
+  ## @param config.mail.port (MAIL_PORT)
+  ## @param config.mail.sendmailCommand (MAIL_ENCRYPTION)
+  ## @param config.mail.username (MAIL_USERNAME)
+  ## @param config.mail.password (MAIL_PASSWORD)
+  ##
+  mail:
+    existingSecret: ""
+    encryption: 'null'
+    from: changeme@example.com
+    host: 'null'
+    mailer: 'log'
+    port: 2525
+    sendmailCommand: ""
+    username: ""
+    password: ""
+
+  ## @param config.mailgun.existingSecret Name of existing secret to use.
+  ## @param config.mailgun.domain (MAILGUN_DOMAIN)
+  ## @param config.mailgun.endpoint (MAILGUN_ENDPOINT)
+  ## @param config.mailgun.secret (MAILGUN_SECRET)
+  ##
+  mailgun:
+    existingSecret: ""
+    domain: ""
+    endpoint: api.mailgun.net
+    secret: ""
+
+  ## @param config.mandrill.existingSecret Name of existing secret to use.
+  ## @param config.mandrill.secret (MANDRILL_SECRET) (do not change unless you know what you're doing)
+  ##
+  mandrill:
+    existingSecret: ""
+    secret: ""
+
+  ## @param config.map.defaultLat (MAP_DEFAULT_LAT)
+  ## @param config.map.defaultLong (MAP_DEFAULT_LONG)
+  ## @param config.map.defaultZoom (MAP_DEFAULT_ZOOM)
+  ##
+  map:
+    defaultLat: "51.983333"
+    defaultLong: "5.916667"
+    defaultZoom: "6"
+
+  ## @param config.mysql.ssl.ca (MYSQL_SSL_CA)
+  ## @param config.mysql.ssl.caPath (MYSQL_SSL_CAPATH)
+  ## @param config.mysql.ssl.cert (MYSQL_SSL_CERT)
+  ## @param config.mysql.ssl.cipher (MYSQL_SSMYSQL_SSL_CIPHERL_CA)
+  ## @param config.mysql.ssl.enable (MYSQL_USE_SSL)
+  ## @param config.mysql.ssl.key (MYSQL_SSL_KEY)
+  ## @param config.mysql.ssl.verifyServerCert (MYSQL_SSL_VERIFY_SERVER_CERT)
+  ##
+  mysql:
+    ssl:
+      ca: ""
+      caPath: /etc/ssl/certs/
+      cert: ""
+      cipher: ""
+      enable: false
+      key: ""
+      verifyServerCert: true
+
+  ## @param config.papertrail.host (PAPERTRAIL_HOST)
+  ## @param config.papertrail.port (PAPERTRAIL_PORT)
+  #
+  papertrail:
+    host: ""
+    port: ""
+
+  ## @param config.passport.existingSecret Name of existing secret to use.
+  ## @param config.passport.privateKey (PASSPORT_PRIVATE_KEY)
+  ## @param config.passport.publicKey (PASSPORT_PUBLIC_KEY)
+  ##
+  passport:
+    existingSecret: ""
+    privateKey: ""
+    publicKey: ""
+
+  ## @param config.pgsql.schema (PGSQL_SCHEMA)
+  ## @param config.pgsql.ssl.cert (PGSQL_SSL_CERT)
+  ## @param config.pgsql.ssl.crlFile (PGSQL_SSL_CRL_FILE)
+  ## @param config.pgsql.ssl.key (PGSQL_SSL_KEY)
+  ## @param config.pgsql.ssl.mode (PGSQL_SSL_MODE)
+  ## @param config.pgsql.ssl.rootCert (PGSQL_SSL_ROOT_CERT)
+  ##     TODO: use existing secret
+  ##
+  pgsql:
+    schema: public
+    ssl:
+      cert: "null"
+      crlFile: "null"
+      key: "null"
+      mode: "prefer"
+      rootCert: ""
+
+  ## @param config.pusher.existingSecret Name of existing secret to use.
+  ## @param config.pusher.id (PUSHER_ID) (do not change unless you know what you're doing)
+  ## @param config.pusher.key (PUSHER_KEY) (do not change unless you know what you're doing)
+  ## @param config.pusher.secret (PUSHER_SECRET) (do not change unless you know what you're doing)
+  ##
+  pusher:
+    existingSecret: ""
+    id: ""
+    key: ""
+    secret: ""
+
+  ## @param config.queue.driver (QUEUE_DRIVER) (do not change unless you know what you're doing)
+  ##
+  queue:
+    driver: sync
+
+  ## @param config.redis.existingSecret Name of existing secret to use.
+  ## @param config.redis.cacheDb (REDIS_CACHE_DB)
+  ## @param config.redis.db (REDIS_DB)
+  ## @param config.redis.host (REDIS_HOST)
+  ## @param config.redis.path (REDIS_PATH)
+  ## @param config.redis.port (REDIS_PORT)
+  ## @param config.redis.scheme (REDIS_CACHE_DB)
+  ## @param config.redis.username (REDIS_USERNAME)
+  ## @param config.redis.password (REDIS_PASSWORD)
+  ##     TODO: add redis to deployment
+  ##
+  redis:
+    existingSecret: ""
+    cacheDb: "1"
+    db: "0"
+    host: "127.0.0.1"
+    path: ""
+    port: '6379'
+    scheme: tcp
+    username: ""
+    password: ""
+
+  ## @param config.send.errorMessage (SEND_ERROR_MESSAGE)
+  ## @param config.send.reportJournals (SEND_REPORT_JOURNALS)
+  ##
+  send:
+    errorMessage: true
+    reportJournals: true
+
+  ## @param config.sessionDriver (SESSION_DRIVER)
+  ##
+  sessionDriver: file
+
+  ## @param config.siteOwner (SITE_OWNER)
+  ##
+  siteOwner: mail@example.com
+
+  ## @param config.sparkpost.existingSecret Name of existing secret to use.
+  ## @param config.sparkpost.secret (SPARKPOST_SECRET)
+  ##
+  sparkpost:
+    existingSecret: ""
+    secret: ""
+
+  ## @param config.tracker.url (TRACKER_URL)
+  ## @param config.tracker.siteId (TRACKER_SITE_ID)
+  ##     TODO: use existing secret
+  ##
+  tracker:
+    url: ""
+    siteId: ""
+
+  ## @param config.trustedProxies (TRUSTED_PROXIES)
+  #
+  trustedProxies: ""
+
+  ## @param config.tz (TZ)
+  #
+  tz: Europe/Amsterdam
+
+
+  ## @param config.validURLprotocols (VALID_URL_PROTOCOLS)
+  #
+  validURLprotocols: ""
+
+## @section web instance parameters
+## Configuration for the web instance
+##
+web:
+  ## @param web.image.registry web container image registry
+  ## @param web.image.repository web container image repository
+  ## @param web.image.tag web container image tag (immutable tags are recommended)
+  ## @param web.image.imagePullPolicy web container image pull policy
+  ##
+  image:
+    registry: docker.io
+    repository: fireflyiii/core
+    tag: version-6.1.19
+    imagePullPolicy: IfNotPresent
+
+  ## @param web.persistence.uploads.enabled enable persistence for uploads
+  ## @param web.persistence.uploads.existingClaim Name of the existing claim
+  ## @param web.persistence.uploads.storageClass Name of the storage class to use. Overrides existingClaim
+  ## @param web.persistence.uploads.size size of the PVC.
+  ##
+  persistence:
+    uploads:
+      enabled: false
+      existingClaim: ""
+      storageClass: ""
+      size: 5Gi
+
+
+  ## @param web.service.type expose the app using this type
+  ## @param web.service.port port to expose the service on
+  ##
+  service:
+    type: ClusterIP
+    port: 80
+
+  ## @param web.updateStrategy.type the update strategy
+  ##
+  updateStrategy:
+    type: RollingUpdate
+
+## @section cronjob instance parameters
+## Configuration for the cronjob instances
+##
+cronjob:
+  ## @param cronjob.successfulJobsHistoryLimit Set the cronjob parameter successfulJobsHistoryLimit
+  ##
+  successfulJobsHistoryLimit: 3
+
+  ## @param cronjob.failedJobsHistoryLimit Set the cronjob parameter failedJobsHistoryLimit
+  ##
+  failedJobsHistoryLimit: 1
+
+  ## @param cronjob.restartPolicy Set the cronjob parameter restartPolicy
+  ##
+  restartPolicy: OnFailure
+
+  ## @param cronjob.image.registry cronjob container image registry
+  ## @param cronjob.image.repository cronjob container image repository
+  ## @param cronjob.image.tag cronjob container image tag (immutable tags are recommended)
+  ## @param cronjob.image.imagePullPolicy cronjob container image pull policy
+  ##
+  image:
+    registry: docker.io
+    repository: curlimages/curl
+    tag: 8.10.1
+    imagePullPolicy: IfNotPresent
+
+# importer:
+#   ## @param importer.image.registry importer container image registry
+#   ## @param importer.image.repository importer container image repository
+#   ## @param importer.image.tag importer container image tag (immutable tags are recommended)
+#   ## @param importer.image.imagePullPolicy importer container image pull policy
+#   ##
+#   image:
+#     registry: docker.io
+#     repository: fireflyiii/data-importer
+#     tag: version-1.5.6
+#     imagePullPolicy: IfNotPresent
+
+
+
+postgresql:
+  enabled: true
+
+  auth:
+    postgresPassword: ""
+    username: firefly
+    password: ""
+    database: "firefly"
+    existingSecret: ""
+
+  initdb:
+    args: "--encoding='UTF8' --lc-collate='C' --lc-ctype='C'"
+
+  primary:
+    persistence:
+      enabled: false
+      existingClaim: ""
+
+  service:
+    type: ClusterIP
+    ports:
+      postgresql: 5432
+
+  backup:
+    enabled: false
+    cronjob:
+      schedule: "@daily"
+      timeZone: "Europe/Brussels"
+      storage:
+        enabled: true
+        # To use an existing Claim
+        existingClaim: ""
+        # To dynamically create a claim
+        resourcePolicy: ""
+        storageClass: ""
+        accessModes:
+          - ReadWriteOnce
+        size: "8Gi"
+        annotations: {}
+        mountPath: "/backup/pgdump"
+
+ingress:
+  enabled: false
+

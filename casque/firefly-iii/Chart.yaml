@@ -1,0 +1,16 @@
+apiVersion: v2
+name: firefly-iii
+description: An (unofficial) Firefly III Helm chart for Kubernetes
+version: 0.1.0
+type: application
+appVersion: "6"
+dependencies:
+  - name: postgresql
+    version: 15.5.34
+    condition: postgresql.enabled
+    repository: https://charts.bitnami.com/bitnami
+sources:
+  - https://charts.bitnami.com/bitnami
+maintainers:
+  - name: bushvin
+icon: https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.github/assets/img/logo-small.png

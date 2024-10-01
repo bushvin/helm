@@ -1,0 +1,148 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "firefly-iii.fullname" . | trunc 59 | trimSuffix "-"}}-web
+  labels:
+    {{- include "firefly-iii.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.web.replicaCount | default 1 }}
+  strategy:
+    type: {{ .Values.web.updateStrategy.type | default "RollingUpdate" }}
+  selector:
+    matchLabels:
+      app: {{ include "firefly-iii.fullname" . | trunc 59 | trimSuffix "-" }}-web
+      {{- include "firefly-iii.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "firefly-iii.fullname" . | trunc 59 | trimSuffix "-" }}-web
+        {{- include "firefly-iii.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ include "firefly-iii.name" . | trunc 59 | trimSuffix "-" }}-web
+        image: {{ include "firefly-iii.web.image" . }}
+        imagePullPolicy: {{ default "IfNotPresent" .Values.web.image.imagePullPolicy }}
+        envFrom:
+          {{- if (eq .Values.config.app.existingSecret "") }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 59 | trimSuffix "-" }}-app
+          {{ else }}
+          - secretRef:
+              name: {{ .Values.config.app.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.cronjob.existingSecret "") .Values.config.cronjob.enabled }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-cron
+          {{ else if and .Values.config.cronjob.enabled (ne .Values.config.cronjob.auth.existingSecret "") }}
+          - secretRef:
+              name: {{ .Values.config.cronjob.existingSecret }}
+          {{- end }}
+          {{- if eq .Values.config.db.existingSecret "" -}}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 60 | trimSuffix "-" }}-db
+          {{ else }}
+          - secretRef:
+              name: {{ .Values.config.db.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.demo.existingSecret "") (or (ne .Values.config.demo.username "") (ne .Values.config.demo.password "")) }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-demo
+          {{ else if ne .Values.config.demo.existingSecret "" }}
+          - secretRef:
+              name: {{ .Values.config.demo.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.ipInfo.existingSecret "") (ne .Values.config.ipInfo.token "") }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-ipinfo
+          {{ else if ne .Values.config.ipInfo.existingSecret "" }}
+          - secretRef:
+              name: {{ .Values.config.ipInfo.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.mail.existingSecret "") (or (ne .Values.config.mail.username "") (ne .Values.config.mail.password "")) }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-mail
+          {{ else if ne .Values.config.mail.existingSecret "" }}
+          - secretRef:
+              name: {{ .Values.config.mail.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.mailgun.existingSecret "") (ne .Values.config.mailgun.secret "") }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-mailgun
+          {{ else if ne .Values.config.mailgun.existingSecret ""}}
+          - secretRef:
+              name: {{ .Values.config.mailgun.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.mandrill.existingSecret "") (ne .Values.config.mandrill.secret "") }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-mandrill
+          {{ else if ne .Values.config.mandrill.existingSecret "" }}
+          - secretRef:
+              name: {{ .Values.config.mandrill.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.passport.existingSecret "") (or (ne .Values.config.passport.privateKey "") (ne .Values.config.passport.publicKey "")) }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-passport
+          {{ else if ne .Values.config.passport.existingSecret ""}}
+          - secretRef:
+              name: {{ .Values.config.passport.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.pusher.existingSecret "") (or (ne .Values.config.pusher.id "") (ne .Values.config.pusher.key "") (ne .Values.config.pusher.secret "")) }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-pusher
+          {{ else if ne .Values.config.pusher.existingSecret "" }}
+          - secretRef:
+              name: {{ .Values.config.pusher.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.redis.existingSecret "") (or (ne .Values.config.redis.username "") (ne .Values.config.redis.password "")) }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-redis
+          {{ else if ne .Values.config.redis.existingSecret "" }}
+          - secretRef:
+              name: {{ .Values.config.redis.existingSecret }}
+          {{- end }}
+          {{- if and (eq .Values.config.sparkpost.existingSecret "") (ne .Values.config.sparkpost.secret "") }}
+          - secretRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-sparkpost
+          {{ else if ne .Values.config.sparkpost.existingSecret "" }}
+          - secretRef:
+              name: {{ .Values.config.sparkpost.existingSecret }}
+          {{- end }}
+          - configMapRef:
+              name: {{ include "firefly-iii.fullname" . | trunc 58 | trimSuffix "-" }}-core
+        {{- if .Values.web.persistence.uploads.enabled }}
+        volumeMounts:
+        - name: upload
+          mountPath: "/var/www/html/storage/upload"
+        {{- end }}
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          failureThreshold: 30
+          periodSeconds: 10
+      {{- if .Values.web.persistence.uploads.enabled }}
+      volumes:
+        - name: upload
+        {{- if ne .Values.web.persistence.uploads.storageClass "" }}
+          persistentVolumeClaim:
+            claimName: {{ include "firefly-iii.fullname" . | trunc 55 | trimSuffix "-" }}-uploads
+        {{- else if ne .Values.web.persistence.uploads.existingClaim "" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.web.persistence.uploads.existingClaim }}
+        {{- else }}
+          persistentVolumeClaim:
+            emptyDir: {}
+        {{- end }}
+      {{- end }}

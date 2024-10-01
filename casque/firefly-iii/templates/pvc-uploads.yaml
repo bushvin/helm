@@ -1,0 +1,15 @@
+{{- if and .Values.web.persistence.uploads.enabled (ne .Values.web.persistence.uploads.storageClass "") }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "firefly-iii.fullname" . | trunc 55 | trimSuffix "-" }}-uploads
+  labels:
+    {{- include "firefly-iii.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.web.persistence.uploads.size | quote }}
+  storageClassName: "{{ .Values.web.persistence.uploads.storageClass }}"
+{{- end }}

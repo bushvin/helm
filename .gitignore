@@ -10,3 +10,6 @@
 
 # Chart cache
 **/.helm_ls_cache
+
+# Chart lock
+**/Chart.lock
